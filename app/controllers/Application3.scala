@@ -20,11 +20,17 @@ class Application3 extends Controller {
 
     val serviceResult = for {
       username <- UserService.getUserName(data) |> HttpResult.fromOption(BadRequest("Username missing from request"))
+
       user <- UserService.getUser(username) |> HttpResult.fromFOption(NotFound("User not found"))
+
       email = UserService.getEmail(user)
+
       validatedEmail <- UserService.validateEmail(email) |> HttpResult.fromEither(InternalServerError(_))
+
       success <- UserService.sendEmail(validatedEmail) |> HttpResult.fromFuture
+
       _ <- HttpResult.require(success, Forbidden("User email address is blacklisted"))
+
     } yield Ok("Mail successfully sent!")
 
     constructPlayResult(serviceResult)
