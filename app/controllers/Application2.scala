@@ -14,18 +14,21 @@ class Application2 extends Controller {
 
     val result = for {
       username <- UserService.getUserName(data) \/> BadRequest("Username missing from request") |> Future.successful |> EitherT.apply
+
       user <- UserService.getUser(username).map { _ \/> NotFound("User not found") } |> EitherT.apply
+
       email = UserService.getEmail(user)
+
       validatedEmail <- UserService.validateEmail(email).leftMap(InternalServerError(_)) |> Future.successful |> EitherT.apply
+
       success <- UserService.sendEmail(validatedEmail).map { _.right[Result] } |> EitherT.apply
+
     } yield {
       if (success) Ok("Mail successfully sent!")
       else Forbidden("User email address is blacklisted")
     }
 
     result.run.map { _.merge }
-
   }
-
 }
 
