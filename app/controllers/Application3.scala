@@ -11,7 +11,7 @@ import scalaz._
 import scalaz.Scalaz._
 import services.UserService
 
-object Application3 extends Controller {
+class Application3 extends Controller {
 
   def index = Action.async { request =>
     import play.api.libs.concurrent.Execution.Implicits.defaultContext

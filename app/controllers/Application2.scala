@@ -7,7 +7,7 @@ import scalaz._
 import scalaz.Scalaz._
 import services.UserService
 
-object Application2 extends Controller {
+class Application2 extends Controller {
 
   def index = Action.async { request =>
     val data = request.queryString.mapValues(_.head)

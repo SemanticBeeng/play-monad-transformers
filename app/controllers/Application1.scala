@@ -12,7 +12,7 @@ import services.UserService
  *
  * Note especially how far the `getOrElse` with the error is from the problem, in the outer maps.
  */
-object Application1 extends Controller {
+class Application1 extends Controller {
 
   def index = Action.async { request =>
     val data = request.queryString.mapValues(_.head)
